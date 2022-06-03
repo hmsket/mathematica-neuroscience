@@ -33,13 +33,13 @@ for i in range(N):
   output = np.dot(hiddens_tmp, W)
   output = sigmoid(output)
   error = squared_error(output, teacher)
+  errors.append(error)
   r = (teacher-output) * output * (1-output)
   delta_W = lr * r * hiddens_tmp
   r_dash = r * W[1:].T * hiddens * (1-hiddens)
   delta_S = lr * r_dash.T * input
   W += delta_W.reshape(H+1, O)
-  S += delta_S.reshape(I, H)
-  errors.append(error)
+  S += delta_S.T
 
 # 検証
 for i in range(len(inputs)):
