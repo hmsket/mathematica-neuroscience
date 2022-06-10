@@ -1,5 +1,6 @@
 import random
 import copy
+import matplotlib.pyplot as plt
 
 def sgn(u):
     if u > 0:
@@ -30,7 +31,7 @@ def set_weights(memories, m, n):
             weights[j][i] = w
     return weights
 
-def set_initial_state(memory, alpha=200):
+def set_initial_state(memory, alpha=0):
     state = copy.deepcopy(memory)
     for i in range(alpha):
         state[i] = memory[alpha-(i+1)]
@@ -45,24 +46,32 @@ def update_state(weights, state, n):
         next_state[i] = sgn(sum)
     return next_state
 
-def count_error(pattern, state, n):
-    count = 0
+def calc_direction_cosine(pattern, state, n):
+    dc = 0
     for i in range(n):
-        if pattern[i] != state[i]:
-            count += 1
-    return count
+        dc += pattern[i] * state[i]
+    dc /= n
+    return dc
 
-def main():
-    m = 80
-    n = 1000
+def main(m=80, n=1000, N=19):
     memories = generate_memories(m, n)
     weights = set_weights(memories, m, n)
-    state = set_initial_state(memories[0])
-    N = 100
-    for _ in range(N):
-        print(count_error(memories[0], state, n))
-        state = update_state(weights, state, n)
-    print(count_error(memories[0], state, n))
+    alphas = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    for alpha in alphas:
+        state = set_initial_state(memories[0], alpha)
+        dc = calc_direction_cosine(memories[0], state, n)
+        dcs = []
+        dcs.append(dc)
+        for _ in range(N):
+            state = update_state(weights, state, n)
+            dc = calc_direction_cosine(memories[0], state, n)
+            dcs.append(dc)
+        plt.plot(range(N+1), dcs, marker=".", label=alpha)
+    plt.xlabel("TIME")
+    plt.ylabel("DIRECTION COSINE")
+    plt.savefig("dynamic.png")
+    #plt.legend(title="alpha")
+    plt.show()
 
 if __name__ == "__main__":
    main()
