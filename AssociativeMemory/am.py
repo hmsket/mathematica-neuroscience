@@ -12,11 +12,11 @@ def generate_memories(m, n):
     for i in range(m):
         for j in range(n):
             rnd = random.random() # rnd ~ U(0,1)
-            if rnd > 0.5: # > か >= かは迷う
+            if rnd > 0.5:
                 memories[i][j] = 1
             else:
                 memories[i][j] = -1
-    return copy.deepcopy(memories)
+    return memories
 
 def set_weights(memories, m, n):
     weights = [[0 for _ in range(n)] for _ in range(n)]
@@ -30,39 +30,39 @@ def set_weights(memories, m, n):
             weights[j][i] = w
     return weights
 
-def set_initial_state(memory, n, alpha=4):
-    tmp = copy.deepcopy(memory)
+def set_initial_state(memory, alpha=200):
+    state = copy.deepcopy(memory)
     for i in range(alpha):
-        memory[i] = tmp[alpha-(i+1)]
-    network = [0 for _ in range(n)]
-    for i in range(n):
-        network[i] = memory[i]
-    return network
+        state[i] = memory[alpha-(i+1)]
+    return state
 
 def update_state(weights, network, n):
-    tmp = copy.deepcopy(network)
+    next_state = [0 for _ in range(n)]
     for i in range(n):
         sum = 0
         for j in range(n):
-            sum += weights[i][j] * tmp[j]
-        network[i] = sgn(sum)
-    return network
+            sum += weights[i][j] * network[j]
+        next_state[i] = sgn(sum)
+    return next_state
 
-def error(pattern, network, n):
+def count_error(pattern, network, n):
     count = 0
     for i in range(n):
         if pattern[i] != network[i]:
             count += 1
     return count
 
-if __name__ == "__main__":
-    m = 8
-    n = 10
+def main():
+    m = 80
+    n = 1000
     memories = generate_memories(m, n)
     weights = set_weights(memories, m, n)
-    network = set_initial_state(memories[0], n)
+    state = set_initial_state(memories[0])
     N = 100
-    for i in range(N):
-        print(error(memories[0], network, n))
-        network = update_state(weights, network, n)
-    print(error(memories[0], network, n))
+    for _ in range(N):
+        print(count_error(memories[0], state, n))
+        state = update_state(weights, state, n)
+    print(count_error(memories[0], state, n))
+
+if __name__ == "__main__":
+   main()
