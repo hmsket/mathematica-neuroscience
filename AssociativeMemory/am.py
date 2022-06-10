@@ -36,19 +36,19 @@ def set_initial_state(memory, alpha=200):
         state[i] = memory[alpha-(i+1)]
     return state
 
-def update_state(weights, network, n):
+def update_state(weights, state, n):
     next_state = [0 for _ in range(n)]
     for i in range(n):
         sum = 0
         for j in range(n):
-            sum += weights[i][j] * network[j]
+            sum += weights[i][j] * state[j]
         next_state[i] = sgn(sum)
     return next_state
 
-def count_error(pattern, network, n):
+def count_error(pattern, state, n):
     count = 0
     for i in range(n):
-        if pattern[i] != network[i]:
+        if pattern[i] != state[i]:
             count += 1
     return count
 
