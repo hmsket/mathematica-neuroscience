@@ -8,17 +8,18 @@ def sgn(u):
             u[i] = 1
         else:
             u[i] = -1
+    return u
 
 def generate_memories(m, n):
     memories = np.random.choice([-1,1], size=(m,n), p=[0.5,0.5])
     return memories
 
-def set_weights(memories, n):
+def set_weights(memories, n, mu=0.08):
     weights = np.zeros((n, n))
     for i in range(n):
         for j in range(i):
             w = np.dot(memories[:,i:i+1].T, memories[:, j:j+1])
-            w = w / n
+            w = mu * w / n
             weights[i][j] = w
             weights[j][i] = w
     return weights
@@ -31,7 +32,7 @@ def set_initial_state(memory, alpha):
 
 def update_state(weights, state):
     next_state = np.dot(weights, state)
-    next_state = np.sign(next_state)
+    next_state = sgn(next_state)
     return next_state
 
 def calc_direction_cosine(pattern, state, n):
@@ -55,7 +56,7 @@ def main(m=80, n=1000, N=19):
         plt.plot(range(N+1), dcs, marker=".", label=alpha)
     plt.xlabel("TIME")
     plt.ylabel("DIRECTION COSINE")
-    plt.savefig("cosine.png")
+    plt.savefig("cosine_m200.png")
     #plt.legend(title="alpha")
     #plt.show()
 
