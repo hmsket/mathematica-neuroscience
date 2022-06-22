@@ -40,7 +40,7 @@ def calc_direction_cosine(pattern, state, n):
     dc /= n
     return dc
 
-def main(m=80, n=1000, N=19):
+def main(m=200, n=1000, N=30):
     memories = generate_memories(m, n)
     weights = set_weights(memories, n)
     alphas = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
@@ -54,9 +54,10 @@ def main(m=80, n=1000, N=19):
             dc = calc_direction_cosine(memories[0], state, n)
             dcs.append(dc)
         plt.plot(range(N+1), dcs, marker=".", label=alpha)
+    plt.title(f"$m={m},n={n}$")
     plt.xlabel("TIME")
     plt.ylabel("DIRECTION COSINE")
-    plt.savefig("cosine_m200.png")
+    plt.savefig(f"m{m}.png")
     #plt.legend(title="alpha")
     #plt.show()
 
