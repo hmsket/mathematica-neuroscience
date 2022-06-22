@@ -15,13 +15,10 @@ def generate_memories(m, n):
     return memories
 
 def set_weights(memories, n, mu=0.08):
-    weights = np.zeros((n, n))
-    for i in range(n):
-        for j in range(i):
-            w = np.dot(memories[:,i:i+1].T, memories[:, j:j+1])
-            w = mu * w / n
-            weights[i][j] = w
-            weights[j][i] = w
+    weights = np.dot(memories.T, memories)
+    weights = mu * weights / n
+    v = np.zeros(n)
+    np.fill_diagonal(weights, v) # 対角成分を0にする
     return weights
 
 def set_initial_state(memory, alpha):
@@ -41,6 +38,7 @@ def calc_direction_cosine(pattern, state, n):
     return dc
 
 def main(m=200, n=1000, N=30):
+    np.random.seed(20220622)
     memories = generate_memories(m, n)
     weights = set_weights(memories, n)
     alphas = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
