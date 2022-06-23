@@ -37,11 +37,11 @@ def calc_direction_cosine(pattern, state, n):
     dc /= n
     return dc
 
-def main(m=200, n=1000, N=30):
+def main(m=80, n=1000, N=30, step=11):
     np.random.seed(20220622)
     memories = generate_memories(m, n)
     weights = set_weights(memories, n)
-    alphas = [0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+    alphas = np.linspace(0, n, step, dtype=int) # e.g. [0, 100, 200, ..., 900, 1000]
     for alpha in alphas:
         state = set_initial_state(memories[0], alpha)
         dc = calc_direction_cosine(memories[0], state, n)
