@@ -4,36 +4,12 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from tqdm import tqdm
 
-# def generate_h(nx, ny, alpha, sigma):
-#     h = np.zeros((nx, ny))
-#     for i in range(nx):
-#         for j in range(ny):
-#             h[i][j] = 
-
-#             dist = (c[0]-i)**2 + (c[1]-j)**2
-#             m[i][j] += alpha*(x-m[i][j])*np.exp(-dist/(2*sigma**2))
-#     return m
-#     return h
-
-
 def generate_ref_vec(nx, ny, d):
     ref = np.random.uniform(-1, 1, size=(nx,ny,d))
     return ref
 
-def generate_input(d, rec=2):
-    """
-    rec
-      1 : 四角形
-      2 : 丸
-    """
-    if rec == 1:
-        x = np.random.uniform(-1, 1, size=d)
-    elif rec == 2:
-        x = []
-        r = np.random.uniform(0, 1)
-        rad = np.random.uniform(0, 2*np.pi)
-        x.append(r*math.sin(rad))
-        x.append(r*math.cos(rad))
+def generate_input(d):
+    x = np.random.uniform(-1, 1, size=d)
     return x
 
 def get_winner_idx(nodes, x):
@@ -67,9 +43,9 @@ def save_anime_frame(ims, frame):
     ims.append(frame)
     return ims
 
-def save_anime(fig, ims, nx, ny):
+def save_anime(fig, ims):
     ani = animation.ArtistAnimation(fig, ims, interval=200)
-    ani.save(f"./figs/tr_{nx}_{ny}.gif", writer="imagemagick")
+    ani.save("a.gif", writer="imagemagick")
 
 def main(nx=20, ny=20, d=2, N=3000):
     """
