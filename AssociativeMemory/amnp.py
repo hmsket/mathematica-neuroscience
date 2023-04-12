@@ -3,11 +3,7 @@ import copy
 import matplotlib.pyplot as plt
 
 def sgn(u):
-    for i in range(len(u)):
-        if u[i] > 0:
-            u[i] = 1
-        else:
-            u[i] = -1
+    u = np.where(u>0, 1, -1)
     return u
 
 def generate_memories(m, n):
