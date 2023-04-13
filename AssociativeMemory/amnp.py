@@ -1,5 +1,4 @@
 import numpy as np
-import copy
 import matplotlib.pyplot as plt
 
 def sgn(u):
@@ -7,34 +6,35 @@ def sgn(u):
     return u
 
 def generate_memories(m, n):
-    memories = np.random.choice([-1,1], size=(m,n), p=[0.5,0.5])
+    rng = np.random.default_rng()
+    memories = rng.choice([-1,1], size=(m,n), p=[0.5,0.5])
     return memories
 
 def set_weights(memories, n, mu=0.08):
-    weights = np.dot(memories.T, memories)
-    weights = mu * weights / n
+    tmp_weights = np.dot(memories.T, memories)
+    weights = mu * tmp_weights / n
+    # おもみ行列の対角成分を０にする
     v = np.zeros(n)
-    np.fill_diagonal(weights, v) # 対角成分を0にする
+    np.fill_diagonal(weights, v)
     return weights
 
 def set_initial_state(memory, alpha):
-    state = copy.deepcopy(memory)
+    state = np.copy(memory)
     for i in range(alpha):
         state[i] = memory[alpha-(i+1)]
     return state
 
 def update_state(weights, state):
-    next_state = np.dot(weights, state)
-    next_state = sgn(next_state)
+    tmp_next_state = np.dot(weights, state)
+    next_state = sgn(tmp_next_state)
     return next_state
 
 def calc_direction_cosine(pattern, state, n):
-    dc = np.dot(pattern, state)
-    dc /= n
+    tmp_dc = np.dot(pattern, state)
+    dc = tmp_dc / n
     return dc
 
 def main(m=80, n=1000, N=30, step=11):
-    np.random.seed(20220622)
     memories = generate_memories(m, n)
     weights = set_weights(memories, n)
     alphas = np.linspace(0, n, step, dtype=int) # e.g. [0, 100, 200, ..., 900, 1000]
