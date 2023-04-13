@@ -13,7 +13,7 @@ def generate_memories(m, n):
 def set_weights(memories, n, mu=0.08):
     tmp_weights = np.dot(memories.T, memories)
     weights = mu * tmp_weights / n
-    # おもみ行列の対角成分を０にする
+    # おもみ行列の対角成分を0にする
     v = np.zeros(n)
     np.fill_diagonal(weights, v)
     return weights
@@ -39,9 +39,9 @@ def main(m=80, n=1000, N=30, step=11):
     weights = set_weights(memories, n)
     alphas = np.linspace(0, n, step, dtype=int) # e.g. [0, 100, 200, ..., 900, 1000]
     for alpha in alphas:
+        dcs = []
         state = set_initial_state(memories[0], alpha)
         dc = calc_direction_cosine(memories[0], state, n)
-        dcs = []
         dcs.append(dc)
         for _ in range(N):
             state = update_state(weights, state)
@@ -51,7 +51,7 @@ def main(m=80, n=1000, N=30, step=11):
     plt.title(f"$m={m},n={n}$")
     plt.xlabel("TIME")
     plt.ylabel("DIRECTION COSINE")
-    plt.savefig(f"m{m}.png")
+    plt.savefig("cosine.png")
     #plt.legend(title="alpha")
     #plt.show()
 
