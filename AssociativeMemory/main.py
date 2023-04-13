@@ -7,7 +7,7 @@ def sgn(u):
 
 def generate_memories(m, n):
     rng = np.random.default_rng()
-    memories = rng.choice([-1,1], size=(m,n), p=[0.5,0.5])
+    memories = rng.choice([-1,1], p=[0.5,0.5], size=(m,n))
     return memories
 
 def set_weights(memories, n, mu=0.08):
